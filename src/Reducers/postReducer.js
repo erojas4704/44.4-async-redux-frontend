@@ -1,10 +1,24 @@
-import { ADD_COMMENT, ADD_POST, DELETE_COMMENT, DELETE_POST, EDIT_POST } from "./actionTypes"
+import {
+    ADD_COMMENT,
+    ADD_POST,
+    DELETE_COMMENT,
+    DELETE_POST,
+    EDIT_POST,
+    SET_POST,
+    SET_POSTS
+} from "./actionTypes"
 import { v4 as uuid } from "uuid"
 
 const INITIAL_STATE = {}
 
 export default function postReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
+        case SET_POST:
+            return {
+                ...action.posts, [action.post.id]: action.post
+            }
+        case SET_POSTS:
+            return { ...action.posts };
         case ADD_POST:
             return {
                 ...state, [action.post.id]: action.post
@@ -16,7 +30,7 @@ export default function postReducer(state = INITIAL_STATE, action) {
                 ...post.comments, [uuid()]: { comment: action.comment }
             };
             return {
-                ...state, [action.postId]: {...post}
+                ...state, [action.postId]: { ...post }
             }
         case DELETE_COMMENT:
             const postToUpdate = state[action.postId];

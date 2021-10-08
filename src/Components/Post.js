@@ -4,9 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import NewCommentForm from "./NewCommentForm";
 import { Link } from "react-router-dom";
-import { addComment } from "../Reducers/actions";
+import { addComment, getPostDetailsFromAPI } from "../Reducers/actions";
 import CommentView from "./CommentView";
 import "./Post.css";
+import { useEffect } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
 
 export default function Post() {
@@ -14,12 +16,16 @@ export default function Post() {
     const dispatch = useDispatch();
     const post = useSelector(state => state.posts[id]);
 
+    useEffect(() => {
+        dispatch(getPostDetailsFromAPI(id));
+    }, [id, dispatch])
+
     const handleNewComment = (form) => {
         dispatch(addComment(id, form.comment));
     };
 
     if (!post) {
-        return <div className="error">Post not found wtf dude</div>
+        return <LoadingSpinner />
     }
 
     return (

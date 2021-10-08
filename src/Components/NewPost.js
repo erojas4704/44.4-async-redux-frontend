@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { addPost, editPost } from "../Reducers/actions";
+import { addPost, editPost, pushNewPostToAPI } from "../Reducers/actions";
 import { Redirect, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
@@ -23,7 +23,7 @@ export default function NewPost() {
         if (post) {
             dispatch(editPost(post.id, form));
         } else {
-            dispatch(addPost({ ...form, id: uuid() }));
+            dispatch(pushNewPostToAPI(form));
         }
 
         setForm({ title: '', description: '', body: '' });
