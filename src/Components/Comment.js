@@ -2,16 +2,16 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './Comment.css'
 
-export default function Comment({ comment }) {
+export default function Comment({ deleteComment, comment }) {
 
     const handleDelete = () => {
-        console.log("delete this trash");
+        deleteComment(comment);
     }
 
     return (
-        <div className="comment">
+        <div className="comment my-2">
             <FontAwesomeIcon className="comment-delete" icon={faTrash} style={{ color: '#e74c3c' }} onClick={handleDelete}>X</FontAwesomeIcon>
-            <div className="mx-4">{comment.text}</div>
+            <div className="mx-2">{comment.comment}</div>
         </div>
     );
 }

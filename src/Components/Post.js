@@ -2,12 +2,11 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import Comment from "./Comment";
 import NewCommentForm from "./NewCommentForm";
-import { v4 as uuid } from "uuid";
-import "./Post.css";
 import { Link } from "react-router-dom";
 import { addComment } from "../Reducers/actions";
+import CommentView from "./CommentView";
+import "./Post.css";
 
 
 export default function Post() {
@@ -16,7 +15,7 @@ export default function Post() {
     const post = useSelector(state => state.posts[id]);
 
     const handleNewComment = (form) => {
-        dispatch(addComment(form));
+        dispatch(addComment(id, form.comment));
     };
 
     if (!post) {
@@ -34,7 +33,7 @@ export default function Post() {
             </div>
             <div className="post-description">{post.description}</div>
             <div className="post-body">{post.body}</div>
-            {post.commments && post.comments.map(comment => <Comment key={uuid()} comment={comment} />)}
+            <CommentView post={post} />
             <NewCommentForm submit={handleNewComment} />
         </div>
     )

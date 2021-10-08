@@ -4,6 +4,10 @@
     align-items: center;
 }
 
+.post-description{
+    font-style: italic;
+}
+
 .post-nav>* {
     margin-right: 10px;
 }
