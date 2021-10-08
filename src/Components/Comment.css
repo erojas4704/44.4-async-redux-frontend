@@ -1,0 +1,13 @@
+.comment {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.comment-delete {
+    color: '#e74c3c';
+}
+
+.comment-delete:hover {
+    cursor: pointer;
+}

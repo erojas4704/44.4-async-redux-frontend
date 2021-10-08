@@ -1,0 +1,19 @@
+.post-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.post-nav>* {
+    margin-right: 10px;
+}
+
+.post-option {
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.post-option:hover {
+    cursor: pointer;
+    color: black;
+}
