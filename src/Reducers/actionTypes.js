@@ -7,3 +7,4 @@ export const SHOW_LOADING = 'SHOW_LOADING';
 export const SET_POSTS = 'SET_POSTS';
 export const SET_POST = 'SET_POST';
 export const GOT_ERROR = 'GOT_ERROR';
+export const VOTE_POST = 'VOTE_POST';

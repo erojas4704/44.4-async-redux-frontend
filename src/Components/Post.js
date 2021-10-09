@@ -1,10 +1,10 @@
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faThumbsDown, faThumbsUp, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import NewCommentForm from "./NewCommentForm";
 import { Link } from "react-router-dom";
-import { addComment, getPostDetailsFromAPI } from "../Reducers/actions";
+import { getPostDetailsFromAPI, pushNewCommentToAPI, votePostInAPI } from "../Reducers/actions";
 import CommentView from "./CommentView";
 import "./Post.css";
 import { useEffect } from "react";
@@ -21,8 +21,12 @@ export default function Post() {
     }, [id, dispatch])
 
     const handleNewComment = (form) => {
-        dispatch(addComment(id, form.comment));
+        dispatch(pushNewCommentToAPI(id, form));
     };
+
+    const vote = (direction) => {
+        dispatch(votePostInAPI(id, direction));
+    }
 
     if (!post) {
         return <LoadingSpinner />
@@ -31,14 +35,25 @@ export default function Post() {
     return (
         <div className="post">
             <div className="post-nav">
-                <h2 className="post-header">{post.title}</h2>
-                <div className="post-options">
-                    <Link to={`/edit/${id}`} ><FontAwesomeIcon className="post-option" style={{ color: '#3498db' }} icon={faEdit} /></Link>
-                    <Link to={`/delete/${id}`} ><FontAwesomeIcon className="post-option" style={{ color: '#e74c3c' }} icon={faTrash} /></Link>
+                <div className="post-nav-left">
+                    <h4 className="post-header">{post.title}</h4>
+                    <p className="post-description">{post.description}</p>
+                </div>
+                <div className="post-nav-right">
+                    <div className="post-nav-row right">
+                        <Link to={`/edit/${id}`} ><FontAwesomeIcon className="post-option" style={{ color: '#3498db' }} icon={faEdit} /></Link>
+                        <Link to={`/delete/${id}`} ><FontAwesomeIcon className="post-option" style={{ color: '#e74c3c' }} icon={faTrash} /></Link>
+                    </div>
+                    <div className="post-nav-row right">
+                        <div className="mx-2 post-nav-votes">{post.votes} Votes:</div>
+                        <div>
+                            <FontAwesomeIcon onClick={() => vote("up")} className="post-option" icon={faThumbsUp} style={{ color: '#2ecc71' }} />
+                            <FontAwesomeIcon onClick={() => vote("down")} className="post-option" icon={faThumbsDown} style={{ color: 'red' }} />
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className="post-description">{post.description}</div>
-            <div className="post-body">{post.body}</div>
+            <p className="post-body">{post.body}</p>
             <CommentView post={post} />
             <NewCommentForm submit={handleNewComment} />
         </div>

@@ -2,9 +2,8 @@ import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { addPost, editPost, pushNewPostToAPI } from "../Reducers/actions";
+import { editPostInAPI, pushNewPostToAPI } from "../Reducers/actions";
 import { Redirect, useParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 
 export default function NewPost() {
     const { id } = useParams();
@@ -21,7 +20,7 @@ export default function NewPost() {
     const handleSubmit = e => {
         e.preventDefault();
         if (post) {
-            dispatch(editPost(post.id, form));
+            dispatch(editPostInAPI(post.id, form));
         } else {
             dispatch(pushNewPostToAPI(form));
         }

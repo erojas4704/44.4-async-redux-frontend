@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ADD_COMMENT, ADD_POST, DELETE_COMMENT, DELETE_POST, EDIT_POST, GOT_ERROR, SET_POST, SET_POSTS, SHOW_LOADING } from "./actionTypes";
+import { ADD_COMMENT, ADD_POST, DELETE_COMMENT, DELETE_POST, EDIT_POST, GOT_ERROR, SET_POST, SET_POSTS, SHOW_LOADING, VOTE_POST } from "./actionTypes";
 
 export function addPost(post) {
     return {
@@ -23,15 +23,15 @@ export function deletePost(postId) {
     }
 }
 
-export function editPost(postId, post) {
+export function editPost(post) {
     return {
         type: EDIT_POST,
-        postId,
+        postId: post.id,
         post
     }
 }
 
-export function deleteComment(commentId, postId) {
+export function deleteComment(postId, commentId) {
     return {
         type: DELETE_COMMENT,
         postId,
@@ -66,6 +66,51 @@ export function gotError(error) {
     }
 }
 
+export function votePost(postId, votes){
+    return {
+        type: VOTE_POST,
+        postId,
+        votes
+    }
+}
+
+export function deleteCommentFromAPI(postId, commentId) {
+    return async dispatch => {
+        dispatch(showLoading());
+        try {
+            const res = await axios.delete(`/api/posts/${postId}/comments/${commentId}`);
+            if (res.data.message === "deleted")
+                dispatch(deleteComment(postId, commentId));
+        } catch (err) {
+            dispatch(gotError(err.response.data));
+        }
+    }
+}
+
+export function pushNewCommentToAPI(postId, comment) {
+    return async dispatch => {
+        dispatch(showLoading());
+        try {
+            const res = await axios.post(`/api/posts/${postId}/comments`, comment);
+            dispatch(addComment(postId, res.data));
+        } catch (err) {
+            dispatch(gotError(err.response.data));
+        }
+    }
+}
+
+export function votePostInAPI(postId, direction) {
+    return async dispatch => {
+        dispatch(showLoading());
+        try {
+            const res = await axios.post(`/api/posts/${postId}/vote/${direction}`);
+            dispatch(votePost(postId, res.data.votes))
+        } catch (err) {
+            dispatch(gotError(err.response.data));
+        }
+    }
+}
+
 
 export function pushNewPostToAPI(post) {
     return async (dispatch) => {
@@ -78,6 +123,19 @@ export function pushNewPostToAPI(post) {
         }
     }
 }
+
+export function editPostInAPI(postId, post) {
+    return async (dispatch) => {
+        dispatch(showLoading());
+        try {
+            let res = await axios.put(`/api/posts/${postId}`, post);
+            dispatch(editPost(res.data))
+        } catch (err) {
+            dispatch(gotError(err.response.data))
+        }
+    }
+}
+
 
 export function getPostsFromAPI() {
     return async (dispatch) => {

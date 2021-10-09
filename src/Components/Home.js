@@ -15,7 +15,10 @@ export default function Home() {
         }
     });
 
-    console.log(posts);
+    const postArray = Object.values(posts);
+    postArray.sort((a, b) => {
+        return b.votes - a.votes;
+    })
 
     useEffect(() => {
         dispatch(getPostsFromAPI());
@@ -23,8 +26,8 @@ export default function Home() {
 
     return (
         <div className="home-previews">
-            {loading && <LoadingSpinner /> }
-            {Object.keys(posts).map(id => <PostPreview key={id} post={posts[id]} />)}
+            {loading && <LoadingSpinner />}
+            {postArray.map(post => <PostPreview key={post.id} post={post} />)}
         </div>
     )
 }

@@ -5,15 +5,20 @@ import {
     DELETE_POST,
     EDIT_POST,
     SET_POST,
-    SET_POSTS
+    SET_POSTS,
+    VOTE_POST
 } from "./actionTypes"
-import { v4 as uuid } from "uuid"
 
 const INITIAL_STATE = {}
 
 export default function postReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
         case SET_POST:
+            const comments = {};
+            action.post.comments.forEach(comment => {
+                comments[comment.id] = comment;
+            });
+            action.post.comments = comments;
             return {
                 ...action.posts, [action.post.id]: action.post
             }
@@ -23,11 +28,19 @@ export default function postReducer(state = INITIAL_STATE, action) {
             return {
                 ...state, [action.post.id]: action.post
             }
+        case VOTE_POST:
+            {
+                const post = { ...state[action.postId] };
+                post.votes = action.votes;
+                return {
+                    ...state, [action.postId]: post
+                }
+            }
         case ADD_COMMENT:
             const post = state[action.postId];
             if (!post.comments) post.comments = {};
             post.comments = {
-                ...post.comments, [uuid()]: { comment: action.comment }
+                ...post.comments, [action.comment.id]: action.comment
             };
             return {
                 ...state, [action.postId]: { ...post }

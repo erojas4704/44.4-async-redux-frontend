@@ -1,17 +1,22 @@
 import { useDispatch } from "react-redux";
-import { deleteComment } from "../Reducers/actions";
+import { deleteCommentFromAPI } from "../Reducers/actions";
 import Comment from "./Comment";
 
-export default function CommentView({ post }) {
+export default function CommentView({ post, deleteComment }) {
     const dispatch = useDispatch();
-    
+
     const handleDelete = (comment) => {
-        dispatch(deleteComment(comment.id, post.id))
+        dispatch(deleteCommentFromAPI(post.id, comment.id))
     }
-    
+
+    const comments = post.comments ?
+        Object.keys(post.comments).map(key => post.comments[key]) :
+        [];
+
     return (
         <>
-            {post.comments && post.comments.map(comment => <Comment deleteComment={handleDelete} key={comment.id} comment={comment} />)}
+            <h4>Comments</h4>
+            {comments && comments.map(comment => <Comment deleteComment={handleDelete} key={comment.id} comment={comment} />)}
         </>
     )
 }
